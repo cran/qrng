@@ -1,5 +1,5 @@
 Package: qrng
-Version: 0.0-1
+Version: 0.0-2
 Encoding: UTF-8
 Title: (Randomized) Quasi-Random Number Generators
 Description: Functionality for generating (randomized) quasi-random numbers in
@@ -17,5 +17,5 @@ Enhances:
 License: GPL-2 | GPL-3
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2015-04-10 10:51:22
-Packaged: 2015-04-10 04:47:58 UTC; mhofert
+Date/Publication: 2015-05-05 16:14:48
+Packaged: 2015-05-05 12:31:12 UTC; mhofert

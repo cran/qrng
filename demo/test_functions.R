@@ -174,15 +174,19 @@ d <- c(2, 10) # dimensions
 tau <- c(0.2, 0.5) # Kendall's tau
 doPDF <- Sys.getenv("USER") == "mhofert" # logical indicating whether cropped PDF is produced
 
+## Disclaimer
+cat(paste0("Note: This simulation takes a couple of minutes.\n"))
 
-### 2.1) Test function test_liner_power() ######################################
+
+### 2.1) Test function test_linear_power() #####################################
 
 ## Compute the absolute error (~ 11min)
 filebasename <- paste0("sim_lin_pow_test_fun_",family)
 file <- paste0(filebasename,".rda")
 if(file.exists(file)) attach(file) else {
     err <- array(, dim=c(length(d), length(tau), length(rng), length(sampling), length(n)),
-                dimnames=list(d=d, tau=tau, rng=rng, sampling=sampling, n=n))
+                 dimnames=list(d=d, tau=tau, rng=rng, sampling=sampling, n=n))
+    cat(paste0("Starting simulation for test_linear_power():\n"))
     for(i in seq_along(d)) { # dimension d
         test_lin_pow <- function(x) test_linear_power(x, alpha=rep(2, d[i]), w=rep(1/d[i], d[i]))
         for(j in seq_along(tau)) { # Kendall's tau
@@ -232,6 +236,7 @@ file <- paste0(filebasename,".rda")
 if(file.exists(file)) attach(file) else {
     err <- array(, dim=c(length(d), length(tau), length(rng), length(sampling), length(n)),
                  dimnames=list(d=d, tau=tau, rng=rng, sampling=sampling, n=n))
+    cat(paste0("Starting simulation for test_Kendall():\n"))
     for(i in seq_along(d)) { # dimension d
         for(j in seq_along(tau)) { # Kendall's tau
             test_Ken <- function(x)
@@ -282,6 +287,7 @@ file <- paste0(filebasename,".rda")
 if(file.exists(file)) attach(file) else {
     err <- array(, dim=c(length(d), length(tau), length(rng), length(sampling), length(n)),
                  dimnames=list(d=d, tau=tau, rng=rng, sampling=sampling, n=n))
+    cat(paste0("Starting simulation for test_Faure():\n"))
     for(i in seq_along(d)) { # dimension d
         for(j in seq_along(tau)) { # Kendall's tau
             test_Fau <- function(x)

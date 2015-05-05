@@ -85,15 +85,15 @@ void ghalton(int n, int d, const char *method, double *res)
 
         /* Main */
 	Rboolean is_ghalton;
-        if(strcmp(method, "ghalton") == 0) is_ghalton=TRUE; else is_ghalton=FALSE;
+        if(strcmp(method, "generalized") == 0) is_ghalton=TRUE; else is_ghalton=FALSE;
         if(!is_ghalton) {
                 for(j=0;j<d;j++) { perm[j] = 1; }
-        } else if(ghalton) {
+        } else {
                 for(j=0; j<d; j++) { perm[j] = permTN2[j]; }
                 if(d > ghaltonMaxDim){
                       for(j=ghaltonMaxDim; j<d; j++) {  perm[j] = 1; }
 		}
-        } else { perror("Wrong method"); }
+        }
         for(i=1; i<n; i++) {
                 for(j=0; j<d; j++) {
                         tmp = i;

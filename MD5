@@ -1,12 +1,12 @@
-4ff06f20cd414678fbda78a4fe9cb15b *DESCRIPTION
-3fbb48bf743af714447370a75cd16a53 *NAMESPACE
+2c870cf955df5aca90bd67091bad8dfc *DESCRIPTION
+9739f6e2a2b209d74efd507258850f37 *NAMESPACE
 0a124d10c0fb0d83dc7b72675e9b205b *R/qrng.R
-3c0d6901ec7b173600effcb1dedcab59 *TODO
+895b376bf70575f0006430bf6c0cc6bb *TODO
 6e193dfc7a85b3b62863d772717ce357 *demo/00Index
 5f7733c23678b203b6b42a92af4f764e *demo/basket_options.R
-7acdccc9e959c92aa5452d76f75873ef *demo/test_functions.R
+cbc0bd8638a969c199f89dbe1c0a2884 *demo/test_functions.R
 3d97a6362f6bbc2a9129575b05d226fa *man/qrng.Rd
-a6be66be0804d1c17c5e5be3adbe49d6 *src/ghalton.c
+fb96df4546f2ed424e6310dbc2a5d05b *src/ghalton.c
 0362d1d2348d52901a974a0e66006869 *src/ghalton.h
 d0520f691deb8181ccf9363a79a53fe2 *src/init.c
 aaa270de6c0e0b2c340e13650108118c *src/korobov.c

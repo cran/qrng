@@ -1,9 +1,1 @@
-- create demo 'basket option'
-- create simulation study from demo (loop over bootstrap repetitions)
-- implement test functions in qrng:
-  1) function(u, alpha) rowsums(u^alpha)
-  2) sobold composed with Rosenblatt
-  3) Kendall's tau: 4*C(u)-1
-  [for comparing different construction methods of quasi copula dependent random numbers]
-- implement sampling for Clayton and t copula with method = c("sobol",
-  "ghalton", "none") and MO and CDM
+- (maybe) implement Sobol sequence

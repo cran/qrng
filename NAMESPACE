@@ -7,4 +7,5 @@ useDynLib(qrng, .registration = TRUE)
 ### Exports ####################################################################
 
 export("korobov",
-       "ghalton")
+       "ghalton",
+       "sobol")

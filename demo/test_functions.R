@@ -4,7 +4,6 @@
 ## estimating high-dimensional integrals by quasi-Monte Carlo methods"),
 ## Mathematics and Computers in Simulation, 62 (3--6), 255--263
 
-require(randtoolbox)
 require(qrng)
 require(copula)
 
@@ -74,8 +73,8 @@ test_Kendall <- function(x, family, tau) {
 
 ##' @title Test function (mapping copula data x to [0,1]^2 via Rosenblatt and
 ##'        then applying Faure's g_1)
-##' @param x (n, d) matrix of copula values in [0,1]
-##' @param alpha weights
+##' @param x (n, d)-matrix of copula values in [0,1]
+##' @param alpha d-vector of weights
 ##' @param family Archimedean copula family
 ##' @param tau Kendall's tau
 ##' @return f(\bm{u}) = \prod_{j=1}^d (|4u_j-2| + \alpha_j) / (1+\alpha_j) where
@@ -85,7 +84,7 @@ test_Kendall <- function(x, family, tau) {
 test_Faure <- function(x, alpha, family, tau) {
     d <- ncol(x)
     theta <- iTau(getAcop(family), tau)
-    u <- rtrafo(x, cop=onacopulaL(family, nacList=list(theta, 1:d)), inverse=TRUE)
+    u <- rtrafo(x, cop=onacopulaL(family, nacList=list(theta, 1:d)), inverse=FALSE)
     alpha. <- matrix(rep(alpha, each=nrow(u)), ncol=d)
     apply((abs(4*u-2)+alpha.)/(1+alpha.), 1, prod)
 }
@@ -103,15 +102,13 @@ test_Faure <- function(x, alpha, family, tau) {
 ##' @param rng.method the random number generating method
 ##' @param sampling.method the copula sampling method (Marshall--Olkin or
 ##'        conditional distribution method)
-##' @param ... additional arguments passed to sobol()
 ##' @return length(n)-vector of bootstrap-estimated mean absolute errors based
 ##'         on samples of size n
 ##' @author Marius Hofert
-##' @note - Absolute error = relative error since test functions integrate to 1
-##'       -
+##' @note Absolute error = relative error since test functions integrate to 1
 abs_err <- function(n, B, d, family=c("Clayton", "Gumbel"), tau, test,
                     rng.method=c("ghalton", "sobol", "prng"),
-                    sampling.method=c("MO", "CDM"), ...)
+                    sampling.method=c("MO", "CDM"))
 {
     stopifnot(n >= 1, d >= 2, B >= 1, 0 < tau, tau < 1, is.function(test))
     family <- match.arg(family)
@@ -130,12 +127,13 @@ abs_err <- function(n, B, d, family=c("Clayton", "Gumbel"), tau, test,
                         ghalton(max.n, d=p)
                     },
                     "sobol" = {
-                        sobol(max.n, dim=p, scrambling=1)
+                        sobol(max.n, d=p, randomize=TRUE)
                     },
                     "prng" = {
                         matrix(runif(max.n*p), ncol=p)
                     },
                     stop("Wrong 'rng.method'"))
+        stopifnot(0 < U, U < 1, dim(U) == c(max.n, p)) # fail-safe programming
 
         ## Build (max(n), d)-matrix of copula samples
         theta <- iTau(getAcop(family), tau) # convert tau to theta
@@ -148,6 +146,7 @@ abs_err <- function(n, B, d, family=c("Clayton", "Gumbel"), tau, test,
                                rtrafo(U, cop=cop, inverse=TRUE)
                            },
                            stop("Wrong 'sampling.method'"))
+        stopifnot(0 < cop.data, cop.data < 1, dim(cop.data) == c(max.n, d)) # fail-safe programming
 
         ## Apply the test function to each line of cop.data and compute the absolute error
         err <- test(cop.data) - 1 # max(n)-vector; 1 = true value
@@ -170,12 +169,12 @@ B <- 25 # (bootstrap) replications
 rng <- c("ghalton", "sobol", "prng") # random number generators
 sampling <- c("CDM", "MO") # sampling methods
 family <- "Clayton" # Gumbel with MO takes too long due to numerical inversion of F for V
-d <- c(2, 10) # dimensions
+d <- c(5, 15) # dimensions
 tau <- c(0.2, 0.5) # Kendall's tau
 doPDF <- Sys.getenv("USER") == "mhofert" # logical indicating whether cropped PDF is produced
 
 ## Disclaimer
-cat(paste0("Note: This simulation takes a couple of minutes.\n"))
+cat(paste0("Note: This simulation may take a couple of minutes.\n"))
 
 
 ### 2.1) Test function test_linear_power() #####################################
@@ -192,7 +191,6 @@ if(file.exists(file)) attach(file) else {
         for(j in seq_along(tau)) { # Kendall's tau
             for(k in seq_along(rng)) { # rng.method
                 for(l in seq_along(sampling)) { # sampling.method
-                    set.seed(271)
                     rt <- system.time(err[i,j,k,l,] <-
                         abs_err(n, B=B, d=d[i], family=family, tau=tau[j],
                                 test=test_lin_pow, rng.method=rng[k],
@@ -220,7 +218,7 @@ for(i in seq_along(d)) { # dimension d
         lines(n, err[i,j,2,2,], lty=mylty[4])
         lines(n, err[i,j,3,1,], lty=mylty[5])
         lines(n, err[i,j,3,2,], lty=mylty[6])
-        legend(130000, 6e-4, lty=mylty, bty="n",
+        legend(130000, 5e-4, lty=mylty, bty="n",
                legend=c("G. Halton; CDM", "G. Halton; MO", "Sobol; CDM", "Sobol; MO",
                "Monte Carlo; CDM", "Monte Carlo; MO"))
         if(doPDF) simsalapar::dev.off.pdf(file=file)
@@ -243,7 +241,6 @@ if(file.exists(file)) attach(file) else {
                 test_Kendall(x, family=family, tau=tau[j])
             for(k in seq_along(rng)) { # rng.method
                 for(l in seq_along(sampling)) { # sampling.method
-                    set.seed(271)
                     rt <- system.time(err[i,j,k,l,] <-
                         abs_err(n, B=B, d=d[i], family=family, tau=tau[j],
                                 test=test_Ken, rng.method=rng[k],
@@ -271,7 +268,7 @@ for(i in seq_along(d)) { # dimension d
         lines(n, err[i,j,2,2,], lty=mylty[4])
         lines(n, err[i,j,3,1,], lty=mylty[5])
         lines(n, err[i,j,3,2,], lty=mylty[6])
-        legend(130000, 3.5e-4, lty=mylty, bty="n",
+        legend(130000, 2e-4, lty=mylty, bty="n",
                legend=c("G. Halton; CDM", "G. Halton; MO", "Sobol; CDM", "Sobol; MO",
                "Monte Carlo; CDM", "Monte Carlo; MO"))
         if(doPDF) simsalapar::dev.off.pdf(file=file)
@@ -291,13 +288,12 @@ if(file.exists(file)) attach(file) else {
     for(i in seq_along(d)) { # dimension d
         for(j in seq_along(tau)) { # Kendall's tau
             test_Fau <- function(x)
-                test_Faure(x, alpha=rep(2, d[i]), family=family, tau=tau[j])
+                test_Faure(x, alpha=1:d[i], family=family, tau=tau[j])
             for(k in seq_along(rng)) { # rng.method
                 for(l in seq_along(sampling)) { # sampling.method
-                    set.seed(271)
                     rt <- system.time(err[i,j,k,l,] <-
                         abs_err(n, B=B, d=d[i], family=family, tau=tau[j],
-                                test=test_Ken, rng.method=rng[k],
+                                test=test_Fau, rng.method=rng[k],
                                 sampling.method=sampling[l]))
                     cat(paste0("d=",d[i],", tau=",tau[j],", rng=",rng[k],", sampling=",
                                sampling[l],": Done in ", round(rt[3]), "s\n"))
@@ -322,7 +318,8 @@ for(i in seq_along(d)) { # dimension d
         lines(n, err[i,j,2,2,], lty=mylty[4])
         lines(n, err[i,j,3,1,], lty=mylty[5])
         lines(n, err[i,j,3,2,], lty=mylty[6])
-        legend(130000, 4e-4, lty=mylty, bty="n",
+        y.loc <- if(i==1 && j==1) 5e-4 else if(i==2 && j==2) 7e-4 else 6e-4
+        legend(130000, y.loc, lty=mylty, bty="n",
                legend=c("G. Halton; CDM", "G. Halton; MO", "Sobol; CDM", "Sobol; MO",
                "Monte Carlo; CDM", "Monte Carlo; MO"))
         if(doPDF) simsalapar::dev.off.pdf(file=file)

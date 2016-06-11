@@ -18,7 +18,7 @@ void korobov(int n, int d, int *generator, int randomize, double *res)
 	int i, j, ij;
 	double U;
 	double *aux;
-	aux = (double *) malloc (d * sizeof(double));
+	aux = (double *) R_alloc(d, sizeof(double));
 
 	/* Init */
 	for(j=0; j<d; j++){
@@ -48,9 +48,6 @@ void korobov(int n, int d, int *generator, int randomize, double *res)
 		}
 		PutRNGstate();
 	}
-
-	/* Clean-up */
-	free(aux);
 }
 
 /**

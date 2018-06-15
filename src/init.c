@@ -12,7 +12,7 @@
 static const R_CallMethodDef callMethods[] = {
 	{"korobov_", (DL_FUNC) &korobov_, 4},
 	{"ghalton_", (DL_FUNC) &ghalton_, 3},
-	{"sobol_",   (DL_FUNC) &sobol_, 3},
+	{"sobol_",   (DL_FUNC) &sobol_, 4},
 	{NULL, NULL, 0}
 };
 

@@ -8,9 +8,9 @@ require(qrng)
 require(copula)
 
 
-### 1) Functions ###############################################################
+### 1 Functions ################################################################
 
-### 1.1) QMC Marshall--Olkin sampling for Clayton and Gumbel ###################
+### 1.1 QMC Marshall--Olkin sampling for Clayton and Gumbel ####################
 
 ##' @title Produces Samples of a d-dimensional Archimedean copula via
 ##'        Marshall--Olkin
@@ -41,7 +41,7 @@ rAC_MO <- function(u, family, theta)
 }
 
 
-### 1.2) Test functions ########################################################
+### 1.2 Test functions #########################################################
 
 ## Note: They all have to integrate to 1
 
@@ -90,7 +90,7 @@ test_Faure <- function(x, alpha, family, tau) {
 }
 
 
-### 1.3) Main function for testing the quality of (copula) quasi-random numbers
+### 1.3 Main function for testing the quality of (copula) quasi-random numbers #
 
 ##' @title Absolute error when integrating a given test function
 ##' @param n *vector* of sample sizes
@@ -161,7 +161,7 @@ abs_err <- function(n, B, d, family=c("Clayton", "Gumbel"), tau, test,
 }
 
 
-### 2) Simulation and analysis #################################################
+### 2 Simulation and analysis ##################################################
 
 ## Parameters
 n <- seq(1e4, 2e5, by=1e4) # sample sizes
@@ -177,7 +177,7 @@ doPDF <- Sys.getenv("USER") == "mhofert" # logical indicating whether cropped PD
 cat(paste0("Note: This simulation may take a couple of minutes.\n"))
 
 
-### 2.1) Test function test_linear_power() #####################################
+### 2.1 Test function test_linear_power() ######################################
 
 ## Compute the absolute error (~ 11min)
 filebasename <- paste0("sim_lin_pow_test_fun_",family)
@@ -226,7 +226,7 @@ for(i in seq_along(d)) { # dimension d
 }
 
 
-### 2.2) Test function test_Kendall() ##########################################
+### 2.2 Test function test_Kendall() ###########################################
 
 ## Compute the absolute error
 filebasename <- paste0("sim_Kendall_test_fun_",family)
@@ -276,7 +276,7 @@ for(i in seq_along(d)) { # dimension d
 }
 
 
-### 2.3) Test function test_Faure() ############################################
+### 2.3 Test function test_Faure() #############################################
 
 ## Compute the absolute error
 filebasename <- paste0("sim_Faure_test_fun_",family)

@@ -1,7 +1,46 @@
 /* C function for computing a Sobol sequence **********************************/
 
 #include "sobol.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
+
+/**
+ * @title Convert Binary String to Gray String
+ * @param n1 TODO
+ * @param size TODO
+ * @param b TODO
+ * @author Christiane Lemieux
+ */
+void bintogray(int n1, int size, int *b)
+{
+	int a[size], k = 1, i = 0;
+	while(n1 != 0) /* converting number to its binary equivalent */
+	{
+		a[i] = n1 % 2;
+		n1 /= 2;
+		i++;
+	}
+	/* Printing binary equivalent
+	 * printf("\nThe binary code of the given number is:");
+	 * for(i = size-1; i >=0; i--)
+	 * printf("%d", a[i]); */
+	/* Gray code conversion */
+	b[0] = a[size-1];
+	for(i = size-1; i >= 0; i--)
+	{
+		if(a[i] == 0 && a[i-1] == 0)
+			b[k] = 0;
+		if(a[i] == 1 && a[i-1] == 1)
+			b[k] = 0;
+		if(a[i] == 0 && a[i-1] == 1)
+			b[k] = 1;
+		if(a[i] == 1 && a[i-1] == 0)
+			b[k] = 1;
+		k++;
+	}
+}
 
 /**
  * @title Generate n Points of a d-dimensional Sobol Sequence
@@ -10,13 +49,15 @@
  * @param randomize logical (here: integer) indicating whether a digital
  *        shift should be included
  * @param res pointer to the result matrix
+ * @skip  number of initial terms in the sequence to be skipped (skip = 0 means
+ *        that the sequence starts at the origin)
  * @return void
- * @author Marius Hofert based on C. Lemieux's RandQMC
+ * @author Marius Hofert based on Christiane's Lemieux's RandQMC
  */
-void sobol(int n, int d, int randomize, double *res)
+void sobol(int n, int d, int randomize, double *res, int skip)
 {
-        int i, count, numcols, j, k;
-	int newv, temp, degree;
+  int i, count, numcols, j, k, initcount;
+  int newv, temp, degree, sizeskip;
 	int column; /* the column to use */
 	unsigned int maxn;
 	double U; /* temporal storage for a single element of point */
@@ -26,14 +67,23 @@ void sobol(int n, int d, int randomize, double *res)
 	int rmaxcoeff = 52;
 	double rmaxint = pow (2, rmaxcoeff);
 	double *rvector;
+	int *gskip = NULL;
         unsigned int v[sobolMaxDim][sobolMaxCol];
         lastpoint = (unsigned int *) R_alloc (d, sizeof(unsigned int));
+
+	sizeskip=0;
+	if(skip>0) {
+	  sizeskip = ceil(log(skip+1)/log(2));
+	  gskip = (int *) R_alloc(sizeskip, sizeof(int));
+	  memset (gskip,0, sizeof(int) * sizeskip);
+	}
+
         memset (lastpoint, 0, sizeof(unsigned int) * d);
 
         /* Initialize the V array */
 
 	/* First the first dimension */
-	numcols = ceil(log(n)/log(2));
+	numcols = ceil(log(n + skip)/log(2));
 	for (i = 0; i < numcols; i++)
 		v[0][i] = 1;
 
@@ -96,21 +146,42 @@ void sobol(int n, int d, int randomize, double *res)
         /* Compute the recipd */
         recipd = ((double) (1.0 / dblmaxn));
 
+
 	/* Init result (and randomization) */
-        for(i=0; i<d; i++){
-		res[i*n] = 0.0;
+	/* initcount=skip-1; */
+
+	/* if(skip == 0) { */
+
+	if(skip>0){
+	  bintogray(skip,sizeskip, gskip);
+	}
+	initcount=skip;
+
+
+
+          for(i=0; i<d; i++){
+	        if(skip>0){
+	           for(j=0;j<sizeskip;j++){
+	              if (gskip[sizeskip-j-1]==1)
+	                   *(lastpoint+i) = *(lastpoint+i) ^ v[i][j];
+		   }
+		}
+		/* res[i*n] = 0.0; */
 		if(randomize){
 			point = *(lastpoint+i);
+                        point = point << (rmaxcoeff - numcols);
 			U = *(rvector+i);
 			U *= rmaxint;
 			randint = (unsigned long long int) U;
 			point = point ^ randint;
 			res[i*n] = ((double) point)/rmaxint;
 		}
-	}
+		else res[i*n] =  ((double) *(lastpoint+i)) * recipd;
+           }
+	  /* } */
 
 	/* Main loop */
-        for(count=0; count<n-1; count++){
+        for(count=initcount; count<n + skip-1; count++){
 		column=0;
 		while ((count >> column) & 0x1) /* '>>' = bitwise right shift by column-many bits and fill with 0s from the left; hexadecimal value of 1 */
 			column++;
@@ -126,9 +197,9 @@ void sobol(int n, int d, int randomize, double *res)
 				U *= rmaxint;
 				randint = (unsigned long long int) U;
 				point = point ^ randint;
-				res[i*n+count+1] = ((double) point)/rmaxint;
+				res[i*n+count+1-skip] = ((double) point)/rmaxint;
 			}
-			else res[i*n+count+1] = ((double) *(lastpoint+i)) * recipd;
+			else res[i*n+count+1-skip] = ((double) *(lastpoint+i)) * recipd;
 		}
 	}
 }
@@ -139,22 +210,25 @@ void sobol(int n, int d, int randomize, double *res)
  * @param d dimension
  * @param randomize logical indicating whether a digital shift should be
           included
+ * @param number of initial terms in the sequence to be skipped (skip = 0 means
+ *        that the sequence starts at the origin)
  * @return (n, d)-matrix
  * @author Marius Hofert
  */
-SEXP sobol_(SEXP n, SEXP d, SEXP randomize)
+SEXP sobol_(SEXP n, SEXP d, SEXP randomize, SEXP skip)
 {
 	/* Input parameters */
 	int n_ = asInteger(n); /* numeric(1) */
 	int d_ = asInteger(d); /* numeric(1) */
 	int randomize_ = asLogical(randomize); /* 0 (= FALSE), 1 (= TRUE) */
+	int skip_ = asInteger(skip); /* numeric(1) */
 
 	/* Create result object */
 	SEXP res = PROTECT(allocMatrix(REALSXP, n_, d_)); /* (n,d)-matrix */
 	double *res_ = REAL(res); /* pointer to the values of res */
 
 	/* Main */
-	sobol(n_, d_, randomize_, res_);
+	sobol(n_, d_, randomize_, res_, skip_);
 
 	/* Return */
 	UNPROTECT(1); /* clean-up */

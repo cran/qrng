@@ -16,7 +16,7 @@
 void ghalton(int n, int d, const char *method, double *res)
 {
         static int perm[ghaltonMaxDim];
-        int base, i, j, k, l, count, maxindex, f;
+        int base, i, j, k, l, maxindex, f;
         double u, U;
         unsigned int tmp;
         unsigned int shcoeff[ghaltonMaxDim][32]; /* the coefficients of the shift */

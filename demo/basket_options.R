@@ -5,7 +5,7 @@ require(qrng)
 require(copula)
 
 
-### 1) Functions ###############################################################
+### 1 Functions ################################################################
 
 ##' @title Produces Samples of a d-dimensional Clayton Copula
 ##' @param u (n, d+1)-matrix of samples in [0,1]
@@ -14,15 +14,15 @@ require(copula)
 ##' @author Mathieu Cambou, Christiane Lemieux, Marius Hofert
 rClaytonMO <- function(u, theta)
 {
-  if(!is.matrix(u)) u <- rbind(u)
+    if(!is.matrix(u)) u <- rbind(u)
 
-  dim. <- dim(u)
-  n <- dim.[1]
-  d <- dim.[2] - 1
-  V <- qgamma(u[,d+1], shape=1/theta) # n-vector, frailty component
-  E <- qexp(u[,seq_len(d)]) # (n,d)-matrix
+    dim. <- dim(u)
+    n <- dim.[1]
+    d <- dim.[2] - 1
+    V <- qgamma(u[,d+1], shape=1/theta) # n-vector, frailty component
+    E <- qexp(u[,seq_len(d)]) # (n,d)-matrix
 
-  (1 + E/matrix(rep(V, d), ncol=d))^(-1/theta) # (n,d)-matrix
+    (1 + E/matrix(rep(V, d), ncol=d))^(-1/theta) # (n,d)-matrix
 }
 
 ##' @title Produces Samples of a d-dimensional Geometric Brownian Motion (GBM)
@@ -54,22 +54,22 @@ rGeoBM <- function(u, S0, mu, sigma, T)
 ##' @author Mathieu Cambou, Christiane Lemieux, Marius Hofert
 risk.measures <- function(x, alpha)
 {
-  if(!is.matrix(x)) x <- rbind(x)
-  n <- nrow(x)
-  d <- ncol(x)
+    if(!is.matrix(x)) x <- rbind(x)
+    n <- nrow(x)
+    d <- ncol(x)
 
-  aloss  <- rowSums(x) # n-vector of aggregated losses
-  VaR <- quantile(aloss, probs=alpha, names=FALSE) # VaR estimate
-  l <- sum(xcd <- aloss > VaR)
-  ES <- mean(aloss[xcd]) / (1-alpha) # ES estimate
+    aloss  <- rowSums(x) # n-vector of aggregated losses
+    VaR <- quantile(aloss, probs=alpha, names=FALSE) # VaR estimate
+    l <- sum(xcd <- aloss > VaR)
+    ES <- mean(aloss[xcd]) / (1-alpha) # ES estimate
 
-  Alloc.first <- x[aloss>=VaR, 1] %*% rep(1/n, l) / (l/n) # capital allocated to X_1
-  Alloc.mid   <- x[aloss>=VaR, floor(d/2)] %*% rep(1/n, l) / (l/n) # capital allocated to X_{floor(d/2)}
-  Alloc.last  <- x[aloss>=VaR,d] %*% rep(1/n, l) / (l/n) # Capital Allocated to X_d
+    Alloc.first <- x[aloss>=VaR, 1] %*% rep(1/n, l) / (l/n) # capital allocated to X_1
+    Alloc.mid   <- x[aloss>=VaR, floor(d/2)] %*% rep(1/n, l) / (l/n) # capital allocated to X_{floor(d/2)}
+    Alloc.last  <- x[aloss>=VaR,d] %*% rep(1/n, l) / (l/n) # Capital Allocated to X_d
 
-  ## return estimated risk measures
-  c(VaR=VaR, ES=ES, Alloc.first=Alloc.first, Alloc.mid=Alloc.mid,
-    Alloc.last=Alloc.last)
+    ## return estimated risk measures
+    c(VaR = VaR, ES = ES, Alloc.first = Alloc.first, Alloc.mid = Alloc.mid,
+      Alloc.last = Alloc.last)
 }
 
 ##' @title Payoff Function for Multiple Stocks Options
@@ -87,27 +87,27 @@ risk.measures <- function(x, alpha)
 payoff <- function(K, N, S0, S, type = c("call", "put"),
                    method = c("basket", "worst.of", "best.of"))
 {
-  stopifnot(K >= 0, N >= 0, S0 >= 0, S >= 0, length(S0) == ncol(S))
-  type <- match.arg(type)
-  method <- match.arg(method)
-  perf <- switch(method,
-                 "basket" = {
-                   rowMeans(t(t(S)/S0))
-                 },
-                 "worst.of" = {
-                   apply(t(t(S)/S0), 1, min)
-                 },
-                 "best.of" = {
-                   apply(t(t(S)/S0), 1, max)
-                 },
-                 stop("Wrong 'method'"))
-  N * pmax(0, if(type=="call") perf - K else K - perf)
+    stopifnot(K >= 0, N >= 0, S0 >= 0, S >= 0, length(S0) == ncol(S))
+    type <- match.arg(type)
+    method <- match.arg(method)
+    perf <- switch(method,
+                   "basket" = {
+        rowMeans(t(t(S)/S0))
+    },
+    "worst.of" = {
+        apply(t(t(S)/S0), 1, min)
+    },
+    "best.of" = {
+        apply(t(t(S)/S0), 1, max)
+    },
+    stop("Wrong 'method'"))
+    N * pmax(0, if(type=="call") perf - K else K - perf)
 }
 
 
-### 2) Case Study ##############################################################
+### 2 Case Study ###############################################################
 
-### 2.1) Define parameters #####################################################
+### 2.1 Define parameters ######################################################
 
 n <- 1e5 # Monte Carlo sample size
 d <- 4 # dimension
@@ -134,7 +134,7 @@ th.t <- iTau(ellipCopula(family.t, df=nu), tau) # corresponding parameter
 t.cop <- ellipCopula(family.t, param=th.t, dim=d, df=nu) # define copula object
 
 
-### 2.2) Sampling ##############################################################
+### 2.2 Sampling ###############################################################
 
 ## Uniform samples for CDM
 set.seed(271)
@@ -173,7 +173,7 @@ S.C.CDM. <- rGeoBM(U.C.CDM., S0=S0, mu=rep(r, d), sigma=sigma, T=T)
 S.C.MO.  <- rGeoBM(U.C.MO.,  S0=S0, mu=rep(r, d), sigma=sigma, T=T)
 
 
-### 2.3) Functional Calculation ################################################
+### 2.3 Functional Calculation #################################################
 
 erT <- exp(-r*T)
 
@@ -213,12 +213,12 @@ rm.C.CDM. <- risk.measures(S.C.CDM., alpha)
 rm.C.MO.  <- risk.measures(S.C.MO.,  alpha)
 
 
-### 2.4) Results ###############################################################
+### 2.4 Results ################################################################
 
 res <- array(, dim=c(4,2,2), dimnames=list(type=c("basket", "worst.of",
-                                           paste0("VaR.", alpha), paste0("ES.", alpha)),
-                             copula=c("Clayton", paste0("t", nu)),
-                             method=c("CDM", "MO")))
+                                                  paste0("VaR.", alpha), paste0("ES.", alpha)),
+                                           copula=c("Clayton", paste0("t", nu)),
+                                           method=c("CDM", "MO")))
 res["basket",,]     <- matrix(c(basket.C.CDM., NA, basket.C.MO., basket.t.CDM.), ncol=2)
 res["worst.of",,]   <- matrix(c(worst.of.C.CDM., NA, worst.of.C.MO., worst.of.t.CDM.), ncol=2)
 res[paste0("VaR.", alpha),,] <- matrix(c(rm.C.CDM.[1], NA, rm.C.MO.[1], rm.t.CDM.[1]), ncol=2)

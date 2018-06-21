@@ -1,4 +1,4 @@
-cfe4a0a2097b8ddad0476016d1129c4f *DESCRIPTION
+c228adf6a256ecf12df4db06d17d7cfd *DESCRIPTION
 747d1a0c8443c0c33956ef44d6e412aa *NAMESPACE
 5cf2b0b33cceb42c62a91c38c8b37bce *R/qrng.R
 6e193dfc7a85b3b62863d772717ce357 *demo/00Index
@@ -10,5 +10,5 @@ da13522de593eb5b251c9b007358339f *src/ghalton.c
 a279185c7a2d276ba99edc3d9dfa8c97 *src/init.c
 cfc7250f635c4e62fe5c8b9d5ca24e03 *src/korobov.c
 4450ab5852165b02d1b5b340c7d12e17 *src/korobov.h
-5a45149c55595fbdd31645d01ef83152 *src/sobol.c
+88a861a0806b546a5188732089a068a9 *src/sobol.c
 aa6b501a7d42614c8d44e8716d2b1778 *src/sobol.h

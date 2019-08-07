@@ -1,5 +1,5 @@
 Package: qrng
-Version: 0.0-5
+Version: 0.0-6
 Encoding: UTF-8
 Title: (Randomized) Quasi-Random Number Generators
 Description: Functionality for generating (randomized) quasi-random numbers in
@@ -12,11 +12,11 @@ Author: Marius Hofert [aut, cre],
   Christiane Lemieux [aut]
 Maintainer: Marius Hofert <marius.hofert@uwaterloo.ca>
 Depends: R (>= 3.0.0)
-Imports:
+Imports: methods, randtoolbox, utils, copula
 Suggests:
 Enhances:
 License: GPL-2 | GPL-3
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2018-06-21 17:37:54 UTC
-Packaged: 2018-06-21 16:36:24 UTC; mhofert
+Date/Publication: 2019-08-07 09:00:02 UTC
+Packaged: 2019-08-06 19:39:29 UTC; mhofert

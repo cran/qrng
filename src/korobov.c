@@ -23,7 +23,7 @@ void korobov(int n, int d, int *generator, int randomize, double *res)
 	/* Init */
 	for(j=0; j<d; j++){
 		aux[j] = generator[j] / ((double) n);
-		res[j*n] = 0.0;
+		res[j*n] = 0.0; /* case i = 0 below */
 	}
 
 	/* Generate points */

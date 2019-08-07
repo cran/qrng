@@ -1,5 +1,16 @@
 useDynLib(qrng, .registration = TRUE)
 
-export("korobov",
-       "ghalton",
-       "sobol")
+
+### Imports ####################################################################
+
+importFrom("methods", "hasArg")
+importFrom("randtoolbox", sobol)
+importFrom("utils", "tail", "packageVersion")
+importFrom("copula", "cCopula", "indepCopula")
+importFrom("stats", "quantile")
+
+
+### Exports ####################################################################
+
+export("korobov", "ghalton", "sobol",
+       "sum_of_squares", "sobol_g", "exceedance")

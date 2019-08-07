@@ -1,2 +1,4 @@
 basket_options      Estimate the price of basket call options
+sobol_examples      Examples of sobol() calls
 test_functions      Test functions for QRNGs
+

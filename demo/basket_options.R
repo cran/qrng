@@ -1,5 +1,7 @@
-### Estimate the price of different European options on multiple stocks and
-### compute risk measures based on aggregate losses.
+## By Marius Hofert
+
+## Estimate the price of different European options on multiple stocks and
+## compute risk measures based on aggregate losses.
 
 require(qrng)
 require(copula)

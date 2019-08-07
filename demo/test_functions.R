@@ -1,4 +1,6 @@
-### Experimenting with test functions for MC ###################################
+## By Marius Hofert
+
+## Experimenting with test functions for MC
 
 ## Ideas generalized from Sobol, Asotsky (2003, "One more experiment on
 ## estimating high-dimensional integrals by quasi-Monte Carlo methods"),

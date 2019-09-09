@@ -3,6 +3,11 @@
 ## Examples of sobol() calls (presented here instead of on ?sobol) to avoid
 ## a non-reproducible triggering of valgrind (2019-08-06).
 
+library(qrng)
+
+n <- 1021 # prime
+d <- 4 # dimension
+
 ## Randomized Sobol' sequence (with digital shift)
 set.seed(271)
 u <- sobol(n, d, randomize = "digital.shift")

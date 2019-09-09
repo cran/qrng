@@ -20,18 +20,27 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
     must be in \eqn{\{1,\dots,n\}}{{1,...,n}} and must be (coercible to)
     integers.}
   \item{randomize}{A \code{\link{character}} string indicating the type
-    of randomization for the point set
+    of randomization for the point set.
     \describe{
-      \item{"none"}{no randomization.}
-      \item{"shift"}{uniform random variate modulo 1.}
-      \item{"digital.shift"}{a digital shift.}
-      \item{"Owen", "Faure.Tezuka","Owen.Faure.Tezuka"}{calls
-	\code{\link{sobol}()} from package \pkg{randtoolbox} with
-        \code{scrambling} being 1, 2 and 3, respectively.}
+      \item{\code{korobov()}}{one of the following:
+	\describe{
+	  \item{"none"}{no randomization.}
+	  \item{"shift"}{a uniform random variate modulo 1.}
+	}
       }
-      If \code{randomize} is a \code{\link{logical}}, then
-      it is interpreted as \code{"none"} if \code{FALSE}
-      and \code{"digital.shift"} if \code{TRUE}.
+      \item{\code{sobol()}}{one of the following:
+	\describe{
+	  \item{\code{"none"}}{no randomization.}
+	  \item{"digital.shift"}{a digital shift.}
+	  \item{"Owen", "Faure.Tezuka","Owen.Faure.Tezuka"}{calls
+	    \code{\link{sobol}()} from package \pkg{randtoolbox} with
+            \code{scrambling} being 1, 2 and 3, respectively.}
+	}
+	If \code{randomize} is a \code{\link{logical}}, then
+	it is interpreted as \code{"none"} if \code{FALSE}
+	and \code{"digital.shift"} if \code{TRUE}.
+      }
+    }
   }
   \item{method}{A \code{\link{character}} string indicating which
     sequence is generated, generalized Halton or (plain) Halton.}

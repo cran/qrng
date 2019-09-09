@@ -121,28 +121,28 @@ void ghalton(int n, int d, const char *method, double *res)
 
 /**
  * @title R Interface to C for Generating a Generalized Halton Sequence
- * @param n number of points
- * @param d dimension
- * @param method character string indicating which sequence is generated
+ * @param n_ number of points
+ * @param d_ dimension
+ * @param method_ character string indicating which sequence is generated
  *        (generalized Halton or (plain) Halton)
  * @return (n, d)-matrix
  * @author Marius Hofert
  */
-SEXP ghalton_(SEXP n, SEXP d, SEXP method)
+SEXP ghalton_(SEXP n_, SEXP d_, SEXP method_)
 {
     /* Input parameters */
-    int n_ = asInteger(n); /* numeric(1) */
-    int d_ = asInteger(d); /* numeric(1) */
-    const char *method_ = CHAR(STRING_ELT(method, 0)); /* character(1) */
+    int n = asInteger(n_); /* numeric(1) */
+    int d = asInteger(d_); /* numeric(1) */
+    const char *method = CHAR(STRING_ELT(method_, 0)); /* character(1) */
 
     /* Create result object */
-    SEXP res = PROTECT(allocMatrix(REALSXP, n_, d_)); /* (n,d)-matrix */
-    double *res_ = REAL(res); /* pointer to the values of res */
+    SEXP res_ = PROTECT(allocMatrix(REALSXP, n, d)); /* (n,d)-matrix */
+    double *res = REAL(res_); /* pointer to the values of res */
 
     /* Main */
-    ghalton(n_, d_, method_, res_);
+    ghalton(n, d, method, res);
 
     /* Return */
     UNPROTECT(1); /* clean-up */
-    return res;
+    return res_;
 }

@@ -52,29 +52,29 @@ void korobov(int n, int d, int *generator, int randomize, double *res)
 
 /**
  * @title R Interface to C for Generating a Korobov Sequence
- * @param n number of points
- * @param d dimension
- * @param generator vector of generator points
- * @param randomize string indicating whether the points are randomized
+ * @param n_ number of points
+ * @param d_ dimension
+ * @param generator_ vector of generator points
+ * @param randomize_ string indicating whether the points are randomized
  * @return (n, d)-matrix
  * @author Marius Hofert
  */
-SEXP korobov_(SEXP n, SEXP d, SEXP generator, SEXP randomize)
+SEXP korobov_(SEXP n_, SEXP d_, SEXP generator_, SEXP randomize_)
 {
     /* Input parameters */
-    int n_ = asInteger(n); /* numeric(1) */
-    int d_ = asInteger(d); /* numeric(1) */
-    int *generator_ = INTEGER(coerceVector(generator, INTSXP)); /* numeric(d) */
-    int randomize_ = asLogical(randomize); /* numeric(1) */
+    int n = asInteger(n_); /* numeric(1) */
+    int d = asInteger(d_); /* numeric(1) */
+    int *generator = INTEGER(coerceVector(generator_, INTSXP)); /* numeric(d) */
+    int randomize = asLogical(randomize_); /* numeric(1) */
 
     /* Create result object */
-    SEXP res = PROTECT(allocMatrix(REALSXP, n_, d_)); /* (n,d)-matrix */
-    double *res_ = REAL(res); /* pointer to the values of res */
+    SEXP res_ = PROTECT(allocMatrix(REALSXP, n, d)); /* (n,d)-matrix */
+    double *res = REAL(res_); /* pointer to the values of res */
 
     /* Main */
-    korobov(n_, d_, generator_, randomize_, res_);
+    korobov(n, d, generator, randomize, res);
 
     /* Return */
     UNPROTECT(1); /* clean-up */
-    return res;
+    return res_;
 }

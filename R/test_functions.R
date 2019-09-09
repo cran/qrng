@@ -28,9 +28,9 @@ sobol_g <- function(u, copula = indepCopula(dim = ncol(u)), alpha = 1:ncol(u), .
 {
     if(packageVersion("copula") < "0.999-20")
         stop('Your version of \'copula\' is not sufficient. Consider updating via install.packages("copula", repos = "http://R-Forge.R-project.org")')
-    v <- cCopula(u, copula = copula, inverse = TRUE, ...)
+    v <- cCopula(u, copula = copula, ...)
     a <- rep(alpha, each = nrow(v))
-    apply((abs(4 * v - 2) + a) / (1 + a), 1, prod)
+    apply((abs(4 * v - 1) + a) / (1 + a), 1, prod)
 }
 
 ##' @title Computing Indicators of Rows Exceeding a Threshold

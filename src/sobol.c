@@ -18556,11 +18556,10 @@ void sobol(int n, int d, int randomize, double *res, int skip)
 
 /**
  * @title R Interface to C for Generating a Sobol Sequence
- * @param n number of points
- * @param d dimension
- * @param randomize logical indicating whether a digital shift should be
- included
- * @param number of initial terms in the sequence to be skipped (skip = 0 means
+ * @param n_ number of points
+ * @param d_ dimension
+ * @param randomize_ logical indicating whether a digital shift should be included
+ * @param skip_ number of initial terms in the sequence to be skipped (skip = 0 means
  *        that the sequence starts at the origin)
  * @return (n, d)-matrix
  * @author Marius Hofert

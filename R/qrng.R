@@ -87,6 +87,6 @@ sobol <- function(n, d = 1, randomize = c("none", "digital.shift", "Owen",
                if(!has.seed) seed <- 4711 # randtoolbox::sobol's default
                res <- randtoolbox::sobol(n + skip, dim = d, scrambling = scrambling,
                                          seed = seed, ...)
-               if(d == 1) tail(res, n = -skip) else res[(1+skip):(n+skip),]
+               if(d == 1) res[(1+skip):(n+skip)] else res[(1+skip):(n+skip),]
            }, stop("Wrong 'randomize'"))
 }

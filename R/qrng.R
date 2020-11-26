@@ -59,6 +59,7 @@ ghalton <- function(n, d = 1, method = c("generalized", "halton"))
 ##'        (skip = 0 means the sequence starts at the origin). Note that
 ##'        for the scrambling methods, this simply computes n + skip points
 ##'        and omits the first 'skip'-many.
+##' @param ... additional arguments passed to randtoolbox::sobol()
 ##' @return an (n, d)-matrix (an n-vector if d=1) containing the
 ##'         quasi-random sequence
 ##' @author Marius Hofert

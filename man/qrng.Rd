@@ -13,13 +13,13 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
                                 "Owen.Faure.Tezuka"), seed, skip = 0, ...)
 }
 \arguments{
-  \item{n}{Number \eqn{n} of points to be generated \eqn{\ge 2}{>= 2}.}
-  \item{d}{Dimension \eqn{d}.}
-  \item{generator}{A \code{\link{numeric}} of length \eqn{d} or length 1
+  \item{n}{number \eqn{n} of points to be generated \eqn{\ge 2}{>= 2}.}
+  \item{d}{dimension \eqn{d}.}
+  \item{generator}{\code{\link{numeric}} of length \eqn{d} or length 1
     (in which case it is appropriately extended to length \eqn{d}). All numbers
     must be in \eqn{\{1,\dots,n\}}{{1,...,n}} and must be (coercible to)
     integers.}
-  \item{randomize}{A \code{\link{character}} string indicating the type
+  \item{randomize}{\code{\link{character}} string indicating the type
     of randomization for the point set.
     \describe{
       \item{\code{korobov()}}{one of the following:
@@ -42,7 +42,7 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
       }
     }
   }
-  \item{method}{A \code{\link{character}} string indicating which
+  \item{method}{\code{\link{character}} string indicating which
     sequence is generated, generalized Halton or (plain) Halton.}
   \item{seed}{if provided, an integer used within
     \code{\link{set.seed}()} for the non-scrambling \code{randomize}
@@ -50,8 +50,8 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
     to the underlying \code{\link{sobol}()} from package
     \pkg{randtoolbox} for the scrambling methods. If not provided,
     the non-scrambling methods respect a global \code{\link{set.seed}()}
-    but scrambling methods do not (they then use 4711 as default);
-    see \code{\link{sobol}()} from package \pkg{randtoolbox}.}
+    but the scrambling methods do not (they then use 4711 as default);
+    see \code{\link{sobol}()} from package \pkg{randtoolbox} for details.}
   \item{skip}{number of initial points in the sequence to be skipped
     (\code{skip = 0} means the sequence starts with at the origin).
     Note that for the scrambling methods this simply computes \code{n +

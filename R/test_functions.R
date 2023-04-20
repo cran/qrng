@@ -36,11 +36,13 @@ sum_of_squares <- function(u)
 ##'         mean(X)
 ##'       - This is normally used with the mad() to check 'quality' of QRNGs
 ##'         (apart from that, use sd())
-sobol_g <- function(u, copula = indepCopula(dim = ncol(u)), alpha = 1:ncol(u), ...)
+sobol_g <- function(u, copula = copula::indepCopula(dim = ncol(u)), alpha = 1:ncol(u), ...)
 {
+    if(!requireNamespace("copula")) # need "" here as otherwise the formal argument would be used
+        stop("For this test function, the package \'copula\' needs to be installed.")
     if(packageVersion("copula") < "0.999-20")
         stop('Your version of \'copula\' is not sufficient. Consider updating via install.packages("copula", repos = "http://R-Forge.R-project.org")')
-    v <- cCopula(u, copula = copula, ...)
+    v <- copula::cCopula(u, copula = copula, ...)
     a <- rep(alpha, each = nrow(v))
     apply((abs(4 * v - 2) + a) / (1 + a), 1, prod)
 }
@@ -68,7 +70,7 @@ exceedance <- function(x, q, p = 0.99, method = c("indicator",
     method <- match.arg(method)
     switch(method,
            "indicator" = {
-               if(!hasArg(q)) { # ... determine q empirically from p
+               if(missing(q)) { # ... determine q empirically from p
                    q <- if(length(p) == 1) {
                             apply(x, 2, quantile, probs = p, names = FALSE, type = 1)
                         } else {
@@ -84,7 +86,7 @@ exceedance <- function(x, q, p = 0.99, method = c("indicator",
            "individual.given.sum.exceeds" = {
                stopifnot(length(p) == 1)
                s <- rowSums(x)
-               if(!hasArg(q)) {
+               if(missing(q)) {
                    q <- quantile(s, probs = p, names = FALSE, type = 1)
                } else stopifnot(length(q) == 1)
                x[s > q,]
@@ -92,7 +94,7 @@ exceedance <- function(x, q, p = 0.99, method = c("indicator",
            "sum.given.sum.exceeds" = {
                stopifnot(length(p) == 1)
                s <- rowSums(x)
-               if(!hasArg(q)) {
+               if(missing(q)) {
                    q <- quantile(s, probs = p, names = FALSE, type = 1)
                } else stopifnot(length(q) == 1)
                s[s > q]

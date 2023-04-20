@@ -3,10 +3,7 @@ useDynLib(qrng, .registration = TRUE)
 
 ### Imports ####################################################################
 
-importFrom("methods", "hasArg")
-importFrom("randtoolbox", sobol)
 importFrom("utils", "tail", "packageVersion")
-importFrom("copula", "cCopula", "indepCopula")
 importFrom("stats", "quantile")
 
 

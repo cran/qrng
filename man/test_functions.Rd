@@ -8,7 +8,7 @@
 }
 \usage{
 sum_of_squares(u)
-sobol_g(u, copula = indepCopula(dim = ncol(u)), alpha = 1:ncol(u), ...)
+sobol_g(u, copula = copula::indepCopula(dim = ncol(u)), alpha = 1:ncol(u), ...)
 exceedance(x, q, p = 0.99, method = c("indicator", "individual.given.sum.exceeds",
                                       "sum.given.sum.exceeds"))
 }
@@ -18,11 +18,11 @@ exceedance(x, q, p = 0.99, method = c("indicator", "individual.given.sum.exceeds
     generator). For \code{sum_of_squares()} these need to be marginally
     standard uniform and for \code{sobol_g()} they need to follow the
     copula specified by \code{copula}.}
-  \item{copula}{\code{\link{Copula}} object for which the inverse
+  \item{copula}{\code{\link[copula]{Copula}} object for which the inverse
     Rosenblatt transformation exists.}
   \item{alpha}{vector of parameters of Sobol's g test function.}
   \item{\dots}{additional arguments passed to the underlying
-    \code{\link{cCopula}()}.}
+    \code{\link[copula]{cCopula}()}.}
   \item{x}{\eqn{(n, d)}-matrix containing \eqn{n} \eqn{d}-dimensional
     realizations.}
   \item{q}{

@@ -28,6 +28,7 @@ to_array(x, f, format = c("(n*f,d)", "(n,f,d)"))
   \code{\link{korobov}()}, \code{\link{ghalton}()}, \code{\link{sobol}()}.
 }
 \examples{
+## Basic call
 N <- 4 # replications
 n <- 3 # time steps
 d <- 2 # dimension
@@ -35,5 +36,9 @@ set.seed(271) # note: respected for the choice of 'randomize'
 x <- sobol(N, d = n * d, randomize = "digital.shift") # higher-dim. Sobol'
 stopifnot(dim(to_array(x, f = n)) == c(N * n, d)) # conversion and check
 stopifnot(dim(to_array(x, f = n, format = "(n,f,d)")) == c(N, n, d))
+
+## See how the conversion is done
+(x <- matrix(1:(N * n * d), nrow = N, byrow = TRUE))
+to_array(x, f = n) # => (n * d)-column x was blocked in n groups of size d each
 }
 \keyword{utilities}

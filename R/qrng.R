@@ -68,7 +68,7 @@ sobol <- function(n, d = 1, randomize = c("none", "digital.shift", "Owen",
                   seed, skip = 0, ...)
 {
     stopifnot(n >= 1, d >= 1, skip >= 0)
-    has.seed <- hasArg(seed)
+    has.seed <- !missing(seed)
     if(is.logical(randomize))
         randomize <- if(randomize) "digital.shift" else "none" # backwards compatibility
     randomize <- match.arg(randomize)
@@ -86,6 +86,9 @@ sobol <- function(n, d = 1, randomize = c("none", "digital.shift", "Owen",
            "Owen" =, "Faure.Tezuka" =, "Owen.Faure.Tezuka" = {
                scrambling <- if(randomize == "Owen") 1 else if (randomize == "Faure.Tezuka") 2 else 3
                if(!has.seed) seed <- 4711 # randtoolbox::sobol's default
+               randtoolbox <- NULL # hack to avoid "no visible binding for global variable 'randtoolbox'"
+               if(!requireNamespace(randtoolbox))
+                   stop("Your choice of \'randomize\' requires the package \'randtoolbox\' to be installed.")
                res <- randtoolbox::sobol(n + skip, dim = d, scrambling = scrambling,
                                          seed = seed, ...)
                if(d == 1) res[(1+skip):(n+skip)] else res[(1+skip):(n+skip),]

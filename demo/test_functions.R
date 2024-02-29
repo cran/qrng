@@ -129,7 +129,7 @@ abs_err <- function(n, B, d, family=c("Clayton", "Gumbel"), tau, test,
                         ghalton(max.n, d=p)
                     },
                     "sobol" = {
-                        sobol(max.n, d=p, randomize=TRUE)
+                        sobol(max.n, d=p, randomize = "digital.shift")
                     },
                     "prng" = {
                         matrix(runif(max.n*p), ncol=p)

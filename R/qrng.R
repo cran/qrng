@@ -83,11 +83,26 @@ sobol <- function(n, d = 1, randomize = c("none", "digital.shift", "Owen",
                u <- .Call(sobol_, n, d, randomize == "digital.shift", skip)
                if(d == 1) as.vector(u) else u
            },
-           "Owen" =, "Faure.Tezuka" =, "Owen.Faure.Tezuka" = {
-               scrambling <- if(randomize == "Owen") 1 else if (randomize == "Faure.Tezuka") 2 else 3
-               if(!has.seed) seed <- 4711 # randtoolbox::sobol's default
+           "Owen" = { # Note: Currently not provided by randtoolbox anymore, that's why we use 'spacefillr'
+               ## If no seed is provided, we expect random out. However, spacefillr
+               ## then uses 0 as seed by default, so we pass a randomly generated one.
+               if(!has.seed)
+                   seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31) # see https://stackoverflow.com/questions/8810338/same-random-numbers-every-time; otherwise spacefillr uses 0
+               spacefillr <- NULL # hack to avoid "no visible binding for global variable 'spacefillr'"
+               if(!requireNamespace("spacefillr")) {
+                   stop("Your choice of \'randomize\' requires the package \'spacefillr\' to be installed.")
+               }
+               ## As they write on ?generate_sobol_set, this function is based on
+               ## DOI 10.1137/070709359 (by Joe, Kuo; better 2d projections than in randtoolbox)
+               res <- spacefillr::generate_sobol_owen_set(n + skip, dim = d, seed = seed)
+               if(d == 1) res[(1+skip):(n+skip)] else res[(1+skip):(n+skip),]
+           },
+           "Faure.Tezuka" =, "Owen.Faure.Tezuka" = {
+               scrambling <- if(randomize == "Owen") 1 else if (randomize == "Faure.Tezuka") 2 else 3 # we don't use "Owen" anymore
+               if(!has.seed)
+                   seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31) # see https://stackoverflow.com/questions/8810338/same-random-numbers-every-time; otherwise randtoolbox uses 4711
                randtoolbox <- NULL # hack to avoid "no visible binding for global variable 'randtoolbox'"
-               if(!requireNamespace(randtoolbox))
+               if(!requireNamespace("randtoolbox"))
                    stop("Your choice of \'randomize\' requires the package \'randtoolbox\' to be installed.")
                res <- randtoolbox::sobol(n + skip, dim = d, scrambling = scrambling,
                                          seed = seed, ...)

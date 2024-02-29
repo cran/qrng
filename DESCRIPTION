@@ -1,5 +1,5 @@
 Package: qrng
-Version: 0.0-9
+Version: 0.0-10
 Encoding: UTF-8
 Title: (Randomized) Quasi-Random Number Generators
 Description: Functionality for generating (randomized) quasi-random numbers in
@@ -13,13 +13,10 @@ Author: Marius Hofert [aut, cre],
 Maintainer: Marius Hofert <mhofert@hku.hk>
 Depends: R (>= 3.0.0)
 Imports: utils
-Suggests: randtoolbox, copula
+Suggests: spacefillr, randtoolbox, copula
 Enhances:
 License: GPL-2 | GPL-3
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2023-04-20 12:40:02 UTC
-Repository/R-Forge/Project: qrng
-Repository/R-Forge/Revision: 81
-Repository/R-Forge/DateTimeStamp: 2023-04-19 20:16:28
-Packaged: 2023-04-19 20:29:08 UTC; rforge
+Date/Publication: 2024-02-29 14:40:02 UTC
+Packaged: 2024-02-29 14:01:42 UTC; mhofert

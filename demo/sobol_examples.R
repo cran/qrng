@@ -15,10 +15,8 @@ pairs(u, gap = 0, pch = ".", labels = as.expression(
       sapply(1:d, function(j) bquote(italic(u[.(j)])))))
 
 ## Randomized Sobol' sequence (with Owen scrambling)
-## Note: - This is calling randtoolbox::sobol(, scrambling = 1, seed = ...),
-##       - The seed needs to be passed on directly in order to be respected
-##         (a global set.seed() isn't)
-u <- sobol(n, d, randomize = "Owen", seed = 271)
+## Note: This is calling spacefillr::generate_sobol_owen_set()
+u <- sobol(n, d, randomize = "Owen") # auto-generates a seed
 pairs(u, gap = 0, pch = ".", labels = as.expression(
       sapply(1:d, function(j) bquote(italic(u[.(j)])))))
 
@@ -36,7 +34,7 @@ f <- function(n)
 }
 stopifnot(sapply(1:10, f)) # check for n = 1, ..., 10
 
-## Careful when using skip > 0 and randomize = TRUE => seed matters!
+## Careful when using skip > 0 and randomization => seed matters!
 
 ## Drawing all points at once (works, of course)
 n <- 32

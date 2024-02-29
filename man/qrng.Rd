@@ -32,9 +32,12 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
 	\describe{
 	  \item{\code{"none"}}{no randomization.}
 	  \item{"digital.shift"}{a digital shift.}
-	  \item{"Owen", "Faure.Tezuka","Owen.Faure.Tezuka"}{calls
+	  \item{"Owen"}{calls
+	    \code{\link[spacefillr]{generate_sobol_owen_set}()}
+	    from package \pkg{spacefillr}.}
+	  \item{"Faure.Tezuka","Owen.Faure.Tezuka"}{calls
 	    \code{\link{sobol}()} from package \pkg{randtoolbox} with
-            \code{scrambling} being 1, 2 and 3, respectively.}
+            \code{scrambling} being 2 and 3, respectively.}
 	}
 	If \code{randomize} is a \code{\link{logical}}, then
 	it is interpreted as \code{"none"} if \code{FALSE}
@@ -47,17 +50,20 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
   \item{seed}{if provided, an integer used within
     \code{\link{set.seed}()} for the non-scrambling \code{randomize}
     methods (so \code{"none"} or \code{"digital.shift"}) or passed
-    to the underlying \code{\link{sobol}()} from package
+    to the underlying \code{\link[spacefillr]{generate_sobol_owen_set}()}
+    from package \pkg{spacefillr} (for \code{"Owen"}) and
+    \code{\link{sobol}()} from package
     \pkg{randtoolbox} for the scrambling methods. If not provided,
     the non-scrambling methods respect a global \code{\link{set.seed}()}
-    but the scrambling methods do not (they then use 4711 as default);
-    see \code{\link{sobol}()} from package \pkg{randtoolbox} for details.}
+    but the scrambling methods do not (they then use a randomly
+    generated one based on time and process identifier).}
   \item{skip}{number of initial points in the sequence to be skipped
     (\code{skip = 0} means the sequence starts with at the origin).
     Note that for the scrambling methods this simply computes \code{n +
       skip} points and omits the first \code{skip}-many.}
   \item{\dots}{additional arguments passed to \code{\link{sobol}()}
-    from package \pkg{randtoolbox}.}
+    from package \pkg{randtoolbox} for randomization methods
+    \code{"Faure.Tezuka"} and \code{"Owen.Faure.Tezuka"}.}
 }
 \value{
   \code{korobov()} and \code{ghalton()} return an
@@ -66,9 +72,6 @@ sobol  (n, d = 1, randomize = c("none", "digital.shift", "Owen", "Faure.Tezuka",
 }
 \details{
   For \code{sobol()} examples see \code{demo(sobol_examples)}.
-  In particular, be careful when using
-  \code{skip > 0} and \code{randomize = TRUE}; in this case, choosing
-  a wrong seed (or no seed) might lead to a bad sequence.
 
   Note that these procedures call fast C code. The following
   restrictions apply:
